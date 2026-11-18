@@ -36,13 +36,13 @@ function iniciarSistema() {
                 comprarEntradas();
                 break;
             case "2":
-                alert("consultarCupos()");
+                consultarCupos();
                 break;
             case "3":
-                alert("consultarIngresos()");
+                consultarIngresos();
                 break;
             case "4":
-                alert("finalizarSistema()");
+                finalizarSistema();
                 break;
             default:
                 alert("Opción no válida. Por favor elija una opción del 1 al 4.");
@@ -141,4 +141,44 @@ function comprarEntradas() {
 
     alert(resumen);
     console.log(resumen);
+}
+
+function consultarCupos() {
+    let mensaje;
+
+    if (cuposDisponibles > 10) {
+        mensaje = "Cupos disponibles";
+    } else if (cuposDisponibles >= 1) {
+        mensaje = "Últimos cupos disponibles";
+    } else {
+        mensaje = "Evento agotado";
+    }
+
+    const texto = "Cupos disponibles: " + cuposDisponibles + "\n" + mensaje;
+    alert(texto);
+    console.log(texto);
+}
+
+function consultarIngresos() {
+    const texto =
+        "INGRESOS ACUMULADOS\n\n" +
+        "Total de entradas vendidas: " + entradasVendidas + "\n" +
+        "Total de ingresos acumulados: $" + ingresosAcumulados.toFixed(2) + "\n" +
+        "Número de compras realizadas: " + numeroCompras;
+
+    alert(texto);
+    console.log(texto);
+}
+
+function finalizarSistema() {
+    const texto =
+        "RESUMEN FINAL - INNOVA ESPE 2026\n\n" +
+        "Entradas vendidas: " + entradasVendidas + "\n" +
+        "Ingresos acumulados: $" + ingresosAcumulados.toFixed(2) + "\n" +
+        "Compras realizadas: " + numeroCompras + "\n" +
+        "Cupos restantes: " + cuposDisponibles + "\n\n" +
+        "Gracias por usar el sistema. ¡Hasta pronto!";
+
+    alert(texto);
+    console.log(texto);
 }
