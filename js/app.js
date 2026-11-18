@@ -33,7 +33,7 @@ function iniciarSistema() {
 
         switch (opcion) {
             case "1":
-                alert("comprarEntradas()");
+                comprarEntradas();
                 break;
             case "2":
                 alert("consultarCupos()");
@@ -49,4 +49,96 @@ function iniciarSistema() {
                 console.log("Opción de menú inexistente: " + opcion);
         }
     } while (opcion !== "4");
+}
+
+function obtenerDescuento(tipo) {
+    if (tipo === "estudiante") {
+        return DESCUENTO_ESTUDIANTE;
+    } else if (tipo === "docente") {
+        return DESCUENTO_DOCENTE;
+    } else if (tipo === "publico general" || tipo === "público general" || tipo === "general") {
+        return DESCUENTO_GENERAL;
+    } else {
+        return -1;
+    }
+}
+
+function nombreTipo(tipo) {
+    if (tipo === "estudiante") {
+        return "Estudiante";
+    } else if (tipo === "docente") {
+        return "Docente";
+    } else {
+        return "Público general";
+    }
+}
+
+function cantidadValida(cantidad) {
+    return Number.isInteger(cantidad) && cantidad >= 1 && cantidad <= MAX_ENTRADAS_POR_COMPRA;
+}
+
+function comprarEntradas() {
+    const nombre = prompt("Ingrese el nombre del comprador:");
+    if (nombre === null || nombre.trim() === "") {
+        alert("Compra rechazada: el nombre es obligatorio.");
+        console.log("Compra rechazada: nombre vacío.");
+        return;
+    }
+
+    const tipoIngresado = prompt("Tipo de participante (estudiante, docente o publico general):");
+    if (tipoIngresado === null) {
+        alert("Compra cancelada.");
+        return;
+    }
+    const tipo = tipoIngresado.trim().toLowerCase();
+    const porcentajeDescuento = obtenerDescuento(tipo);
+
+    if (porcentajeDescuento === -1) {
+        alert("Compra rechazada: tipo de participante no válido.");
+        console.log("Compra rechazada: tipo de participante inválido -> " + tipoIngresado);
+        return;
+    }
+
+    const cantidadIngresada = prompt("Cantidad de entradas (entre 1 y " + MAX_ENTRADAS_POR_COMPRA + "):");
+    if (cantidadIngresada === null || cantidadIngresada.trim() === "") {
+        alert("Compra rechazada: debe ingresar una cantidad.");
+        console.log("Compra rechazada: cantidad vacía.");
+        return;
+    }
+    const cantidad = Number(cantidadIngresada);
+
+    if (!cantidadValida(cantidad)) {
+        alert("Compra rechazada: la cantidad debe ser un número entero entre 1 y " + MAX_ENTRADAS_POR_COMPRA + ".");
+        console.log("Compra rechazada: cantidad inválida -> " + cantidadIngresada);
+        return;
+    }
+
+    if (cantidad > cuposDisponibles) {
+        alert("Compra rechazada: solo quedan " + cuposDisponibles + " cupos disponibles.");
+        console.log("Compra rechazada: cupos insuficientes. Solicitados: " + cantidad + ", disponibles: " + cuposDisponibles);
+        return;
+    }
+
+    const subtotal = cantidad * PRECIO_ENTRADA;
+    const descuento = subtotal * porcentajeDescuento / 100;
+    const total = subtotal - descuento;
+
+    cuposDisponibles = cuposDisponibles - cantidad;
+    entradasVendidas = entradasVendidas + cantidad;
+    ingresosAcumulados = ingresosAcumulados + total;
+    numeroCompras = numeroCompras + 1;
+
+    const resumen =
+        "RESUMEN DE COMPRA\n\n" +
+        "Nombre: " + nombre.trim() + "\n" +
+        "Tipo de participante: " + nombreTipo(tipo) + "\n" +
+        "Cantidad de entradas: " + cantidad + "\n\n" +
+        "Subtotal: $" + subtotal.toFixed(2) + "\n" +
+        "Descuento (" + porcentajeDescuento + " %): $" + descuento.toFixed(2) + "\n" +
+        "Total a pagar: $" + total.toFixed(2) + "\n\n" +
+        "Compra realizada exitosamente.\n\n" +
+        "Cupos restantes: " + cuposDisponibles;
+
+    alert(resumen);
+    console.log(resumen);
 }
